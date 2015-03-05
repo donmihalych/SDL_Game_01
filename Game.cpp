@@ -59,24 +59,49 @@ bool Game::init(const char* title, int xpos, int ypos, int with, int height, int
 
 	cout << "init success" << endl;
 
-
-
- 	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/image1.bmp");
-	if (!pTempSurface) 
-		cout << "** image load error **" << endl;
-	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
- 	SDL_FreeSurface(pTempSurface); // не забудем подчистить то что больше не нужно
-
-	SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
-
 	m_bRunning = true;
 	return true;
+}
+
+void Game::hardcodeLoadTexture()
+{
+
+	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/char9.bmp");
+	if (!pTempSurface) cout << "** image load error **" << endl;
+	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
+	SDL_FreeSurface(pTempSurface); // не забудем подчистить то что больше не нужно
+
+	//	SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
+
+	// dest = src
+	m_sourceRectangle.x = 0;
+	m_sourceRectangle.y = 62;
+	m_sourceRectangle.w = 128;
+	m_sourceRectangle.h = 82;
+
+	m_destinationRectangle.x = 0;
+	m_destinationRectangle.y = 0; 
+
+	m_destinationRectangle.w = m_sourceRectangle.w;
+	m_destinationRectangle.h = m_sourceRectangle.h;
+
+	// размеры текстуры
+	cout << m_destinationRectangle.w << " x ";
+	cout << m_destinationRectangle.h << endl;
 }
 
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
+	
+	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+
 	SDL_RenderPresent(m_pRenderer);
+}
+
+void Game::update()
+{
+	m_sourceRectangle.x = 128 * int(((SDL_GetTicks() / 100) % 4));
 }
 
 void Game::handleEvents()
@@ -98,7 +123,6 @@ void Game::handleEvents()
 
 bool Game::running()
 {
-//  ..................
 	return m_bRunning;
 }
 

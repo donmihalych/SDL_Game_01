@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
 
 	g_game = new Game();
 	g_game->init("Chapter 1", 700, 250, 640, 480, 0);
+	g_game->hardcodeLoadTexture();
 
 	while (g_game->running())
 	{

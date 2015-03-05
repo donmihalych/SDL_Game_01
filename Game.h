@@ -11,8 +11,10 @@ public:
 
 	bool init(const char* title, int xpos, int ypos, int with, int height, int flags);
 	
+	void hardcodeLoadTexture();
+
 	void render();
-	void update() {}
+	void update();
 	void handleEvents();
 	bool running();
 
