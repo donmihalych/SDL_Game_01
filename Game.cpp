@@ -3,6 +3,25 @@
 
 using namespace std;
 
+// на всякий случай инициализируем нулем все приватные члены класса
+Game::Game()
+{
+	m_pWindow = nullptr;
+	m_pRenderer = nullptr;
+	m_pTexture = nullptr;
+	m_sourceRectangle = {};
+	m_destinationRectangle = {};
+}
+
+Game::~Game()
+{
+	cout << "cleaning game" << endl;
+	SDL_DestroyWindow(m_pWindow); 
+	SDL_DestroyRenderer(m_pRenderer); 
+	SDL_Quit();
+}
+
+
 bool Game::init(const char* title, int xpos, int ypos, int with, int height, int flags)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
@@ -46,7 +65,9 @@ bool Game::init(const char* title, int xpos, int ypos, int with, int height, int
 	if (!pTempSurface) 
 		cout << "** image load error **" << endl;
 	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
- 	SDL_FreeSurface(pTempSurface);
+ 	SDL_FreeSurface(pTempSurface); // не забудем подчистить то что больше не нужно
+
+	SDL_QueryTexture(m_pTexture, NULL, NULL, &m_sourceRectangle.w, &m_sourceRectangle.h);
 
 	m_bRunning = true;
 	return true;
@@ -60,12 +81,12 @@ void Game::render()
 
 void Game::handleEvents()
 {
-	SDL_Event event;
+	SDL_Event event = {};
 	if (SDL_PollEvent(&event))
 	{
 		switch (event.type)
 		{
-		case SDL_QUIT:
+		case SDL_QUIT: // нажали на крестик, закрыли окно
 			m_bRunning = false;
 		break;
 
@@ -81,10 +102,3 @@ bool Game::running()
 	return m_bRunning;
 }
 
-Game::~Game()
-{
-	cout << "cleaning game" << endl;
-	SDL_DestroyWindow(m_pWindow);
-	SDL_DestroyRenderer(m_pRenderer);
-	SDL_Quit();
-}

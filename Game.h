@@ -6,7 +6,7 @@
 class Game
 {
 public:
-	Game() {}
+	Game();
 	~Game();
 
 	bool init(const char* title, int xpos, int ypos, int with, int height, int flags);
@@ -21,8 +21,8 @@ private:
 	SDL_Renderer* m_pRenderer;
 	
 	SDL_Texture* m_pTexture;
-	SDL_Rect* m_sourceRectangle;
-	SDL_Rect* m_destinationRectangle;
+	SDL_Rect m_sourceRectangle;
+	SDL_Rect m_destinationRectangle;
 
 	bool m_bRunning;
 };
