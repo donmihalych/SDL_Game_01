@@ -40,14 +40,15 @@ bool Game::init(const char* title, int xpos, int ypos, int with, int height, int
 
 	cout << "init success" << endl;
 
-// 	SDL_Surface* pTempSurface = SDL_LoadBMP("char.bmp");
-// 	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
-// 	SDL_FreeSurface(pTempSurface);
 
-	
+
+ 	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/image1.bmp");
+	if (!pTempSurface) 
+		cout << "** image load error **" << endl;
+	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
+ 	SDL_FreeSurface(pTempSurface);
 
 	m_bRunning = true;
-
 	return true;
 }
 

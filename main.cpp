@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS // для freopen
 
 #include <Windows.h>
 #include <iostream>
@@ -12,12 +12,7 @@ Game* g_game = nullptr;
 
 int main(int argc, char* argv[])
 {
-	ofstream fi;
-	fi.open("testfilesream.txt");
-	fi << "text";
-	fi.close();
-	
-	
+	//	возможность вывода в параллельное окно консоли служебных сообщений
 	AllocConsole();
 	freopen("CON", "w", stdout);
 

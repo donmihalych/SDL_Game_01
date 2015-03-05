@@ -1,7 +1,7 @@
 #if !defined __Game__
 #define __Game__
 
-#include "SDL.h"
+#include <SDL.h>
 
 class Game
 {
