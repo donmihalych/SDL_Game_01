@@ -76,6 +76,7 @@ void Game::handleEvents()
 
 bool Game::running()
 {
+//  ..................
 	return m_bRunning;
 }
 
