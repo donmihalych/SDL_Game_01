@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
 	}
 
 	delete g_game;
+
+	system("pause");
 	return 0;
 }
 
