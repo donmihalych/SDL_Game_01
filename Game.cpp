@@ -11,6 +11,8 @@ Game::Game()
 	m_pTexture = nullptr;
 	m_sourceRectangle = {};
 	m_destinationRectangle = {};
+
+	n_frame = 0;
 }
 
 Game::~Game()
@@ -66,7 +68,6 @@ bool Game::init(const char* title, int xpos, int ypos, int with, int height, int
 
 void Game::hardcodeLoadTexture()
 {
-
 	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/char9.bmp");
 	if (!pTempSurface) cout << "** image load error **" << endl;
 	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
@@ -102,9 +103,25 @@ void Game::render()
 
 void Game::update()
 {
-	auto t = SDL_GetTicks();
-	int i = ((t / 100) % 4);
-	m_sourceRectangle.x = 128 * i;
+	SDL_Delay(max_FPS_in_ms);
+	m_sourceRectangle.x = 128 * n_frame;
+
+	if ((n_frame < 0) || (n_frame >= 3))
+		n_frame = 0;
+	else
+		++n_frame;
+
+
+	/*
+	if (между кадрами)
+		SDL_Delay
+	else
+		m_sourceRectangle.x = 128 * Номер кадра;
+*/
+
+//	auto t = SDL_GetTicks();
+//	int i = ((t / 100) % 4);
+//	m_sourceRectangle.x = 128 * i;
 }
 
 void Game::handleEvents()
