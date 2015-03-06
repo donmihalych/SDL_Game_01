@@ -101,7 +101,9 @@ void Game::render()
 
 void Game::update()
 {
-	m_sourceRectangle.x = 128 * int(((SDL_GetTicks() / 100) % 4));
+	auto t = SDL_GetTicks();
+	int i = ((t / 100) % 4);
+	m_sourceRectangle.x = 128 * i;
 }
 
 void Game::handleEvents()
