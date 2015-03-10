@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <SDL.h>
+#include <SDL_image.h>
 #include "Game.h"
 
 using namespace std;
@@ -18,7 +19,12 @@ int main(int argc, char* argv[])
 
 	g_game = new Game();
 	g_game->init("Chapter 1", 700, 250, 640, 480, 0);
-	g_game->hardcodeLoadTexture();
+
+	if (!g_game->hardcodeLoadTexture())
+	{
+		system("pause");
+		return 0;
+	}
 
 	while (g_game->running())
 	{
@@ -29,7 +35,7 @@ int main(int argc, char* argv[])
 
 	delete g_game;
 
-	system("pause");
+	
 	return 0;
 }
 

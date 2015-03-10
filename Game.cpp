@@ -11,7 +11,6 @@ Game::Game()
 	m_pTexture = nullptr;
 	m_sourceRectangle = {};
 	m_destinationRectangle = {};
-
 	n_frame = 0;
 }
 
@@ -66,10 +65,16 @@ bool Game::init(const char* title, int xpos, int ypos, int with, int height, int
 	return true;
 }
 
-void Game::hardcodeLoadTexture()
+bool Game::hardcodeLoadTexture()
 {
-	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/char9.bmp");
-	if (!pTempSurface) cout << "** image load error **" << endl;
+// 	SDL_Surface* pTempSurface = SDL_LoadBMP("assets/char9.bmp");
+	SDL_Surface* pTempSurface = IMG_Load("assets/1945.png");
+	if (!pTempSurface)
+	{
+		cout << "** image load error **" << endl;
+		return false;
+	}
+
 	m_pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pTempSurface);
 	SDL_FreeSurface(pTempSurface); // не забудем подчистить то что больше не нужно
 
@@ -90,13 +95,15 @@ void Game::hardcodeLoadTexture()
 	// размеры текстуры
 	cout << m_destinationRectangle.w << " x ";
 	cout << m_destinationRectangle.h << endl;
+	return true;
 }
 
 void Game::render()
 {
 	SDL_RenderClear(m_pRenderer);
 	
-	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+// 	SDL_RenderCopy(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle);
+	SDL_RenderCopyEx(m_pRenderer, m_pTexture, &m_sourceRectangle, &m_destinationRectangle, 0, 0, SDL_FLIP_VERTICAL);
 
 	SDL_RenderPresent(m_pRenderer);
 }
