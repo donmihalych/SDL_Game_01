@@ -44,7 +44,6 @@ void render_UPDATE(SDL_Renderer* render, SDL_Texture* texture[], SDL_Rect* destr
 
 
 
-
 int main(int argc, char* argv[])
 {
 	//	возможность вывода в параллельное окно консоли служебных сообщений
@@ -102,6 +101,67 @@ int main(int argc, char* argv[])
 
 	SDL_Event event;
 	bool quit = false;
+	int* leaks = new int;
+
+//////////////////////////////////////////////////////////////////////////
+//////////////  новый игровой цикл	 /////////////////////////////////////
+//////////////	SDL_GetTicks();		 /////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////
+
+	Uint32 previous = SDL_GetTicks();
+	Uint32 lag = 0;
+	Uint32 MS_PER_UPDATE = 20; // чем больше значение, тем больше лагов и меньше нагрузка на процессор
+	Uint32 micro_delay = 10; // дадим между кадрами Х миллисекунд отдыха процессору
+
+	while (!quit)
+		while (SDL_PollEvent(&event))
+		{
+			Uint32 current = SDL_GetTicks(); // текущее время
+			Uint32 elapsed = current - previous; // время потраченное на 1 игровой цикл
+			previous = current;
+
+			lag += elapsed; // прибавим предыдущее время к лагу
+
+	////		processInput(); // обработка ввода
+			SDL_PumpEvents(); // обработчик событий.
+			if (event.type == SDL_QUIT) quit = true;
+
+			while (lag >= MS_PER_UPDATE) // выделим на один апдейт не больше "Х" миллисекунд
+			{
+
+	////			update();
+	//ZOOM----------------------------------------------------------------
+				SDL_Delay(micro_delay);
+
+				if (keyboardState[SDL_SCANCODE_KP_PLUS])
+				{
+					TESTtexture_SCALE += 0.02;
+					player_RECT.h = player_HEIGH * TESTtexture_SCALE;
+					player_RECT.w = player_WIGHT * TESTtexture_SCALE;
+				}
+	
+				if (keyboardState[SDL_SCANCODE_KP_MINUS])
+				{
+					TESTtexture_SCALE -= 0.02;
+					player_RECT.h = player_HEIGH * TESTtexture_SCALE;
+					player_RECT.w = player_WIGHT * TESTtexture_SCALE;
+				}
+
+				lag -= MS_PER_UPDATE;
+			}
+
+	////		render();
+			render_UPDATE(ren, ARRAY_textures, ARRAY_rect, ARRAY_texturesState);	//Написанная нами функция обновления рендера
+			SDL_RenderPresent(ren);
+
+			
+		}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+	/*
+
 	while (!quit)
 		while (SDL_PollEvent(&event))
 		{
@@ -162,8 +222,12 @@ int main(int argc, char* argv[])
 			render_UPDATE(ren, ARRAY_textures, ARRAY_rect, ARRAY_texturesState);	//Написанная нами функция обновления рендера
 			SDL_RenderPresent(ren);
 
+			
+
 
 		}
+
+		*/
 //Перед тем как все закончить нам нужно удалить наши текстуры из памяти.
 	SDL_DestroyTexture(player);
 	SDL_DestroyTexture(background);
@@ -171,8 +235,7 @@ int main(int argc, char* argv[])
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
+
 	return 1;
-	
-	
 }
 

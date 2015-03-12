@@ -1,3 +1,23 @@
+/*
+SDL_Surface is used in software rendering. With software rendering, as saloomi2012 correctly noticed, you are using regular RAM to store image data. Thus, in most cases you can access data buffer associated with surface directly, modifying its content, i.e. it is using CPU, hence the software name.
+SDL_Texture on the other hand, is used in a hardware rendering, textures are stored in VRAM and you don't have access to it directly as with SDL_Surface. The rendering operations are accelerated by GPU, using, internally, either OpenGL or DirectX (available only on Windows) API, which in turn are using your video hardware, hence hardware rendering name.
+	Needless to say that hardware rendering is by orders of magnitude faster than software rendering and should be always be considered as primary option.
+
+SDL_RenderClear(ren); //Очистка рендера // Use this function to clear the current rendering target with the drawing color
+SDL_RenderCopy(ren,background,NULL,&background_RECT); // Use this function to copy a portion of the texture to the current rendering target.
+SDL_RenderPresent(ren); // Вывести все в рендер // Use this function to update the screen with any rendering performed since the previous call
+
+while (SDL_PollEvent(&event)) // опрос // Use this function to poll for currently pending events
+	SDL_PumpEvents(); // обработчик событий. // gathering events from the input devices
+
+SDL_CreateTextureFromSurface // Use this function to create a texture from an existing surface
+	http://lazyfoo.net/tutorials/SDL/07_texture_loading_and_rendering/index.php
+
+
+
+
+*/
+
 #define _CRT_SECURE_NO_WARNINGS // для freopen
 
 #include <string>
@@ -167,7 +187,7 @@ int main(int argc, char* argv[])
 //Перед тем как все закончить нам нужно удалить наши текстуры из памяти.
 	SDL_DestroyTexture(player);
 	SDL_DestroyTexture(background);
-
+	
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
@@ -176,3 +196,26 @@ int main(int argc, char* argv[])
 	
 }
 
+void ss()
+{
+	double previous = getCurrentTime();
+	double lag = 0.0;
+	
+	while (true)
+	{
+		double current = getCurrentTime(); // текущее время
+		double elapsed = current - previous; // время потраченное на 1 игровой цикл
+		previous = current;
+		lag += elapsed;
+
+		processInput();
+
+		while (lag >= MS_PER_UPDATE) // выделим на один апдейт не больше "500" миллисекунд
+		{
+			update();
+			lag -= MS_PER_UPDATE;
+		}
+
+		render();
+	}
+}
